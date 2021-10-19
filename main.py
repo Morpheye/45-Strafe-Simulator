@@ -3,6 +3,17 @@ from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 from discord.ext.commands.errors import CommandOnCooldown
 import sqlite3
+import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+#environment variables
+
+TOKEN = os.getenv("TOKEN")
+
+configfile = open("config.json", "r")
+CONFIG = json.loads(configfile.read())
 
 bot = commands.Bot(command_prefix = "?", intents = discord.Intents.all(), activity = discord.Game(name = "MCPK"))
 bot.remove_command('help')
@@ -143,4 +154,4 @@ bot.load_extension('commands.single45')
 bot.load_extension('commands.double45')
 bot.load_extension('commands.triple45')
 
-bot.run("token")
+bot.run(TOKEN)
