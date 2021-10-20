@@ -2,9 +2,7 @@ from discord.ext import commands
 import json
 import random
 import math
-from main import add_coins
-from main import add_xp
-from main import get_level
+from main import add_coins, add_xp, get_level, get_kriddytoo_shrine_boost, add_kriddytoo_shrine_boost
 
 triple45file = open("jumps\\triple45s.json", "r")
 TRIPLE45 = json.loads(triple45file.read())
@@ -22,14 +20,19 @@ async def triple45(ctx, coords="0.0"):
     if await get_level(ctx.author.id) < 20:
         return await ctx.send(f"**{ctx.author}**, triple 45ing requires **level 20**")
 
+    if await get_kriddytoo_shrine_boost(ctx.author.id) > 0:
+        kriddytoo_boost = 5
+    else:
+        kriddytoo_boost = 0
+
 
     selected = random.choice(TRIPLE45["triple45s"])
 
-    strength1 = round(random.uniform(-5, 5) * (25 / (25 + await get_level(ctx.author.id))), 4)
-    strength2 = random.randint(0,50) + await get_level(ctx.author.id)
+    strength1 = round(random.uniform(-5, 5) * (25 / (25 + kriddytoo_boost + await get_level(ctx.author.id))), 4)
+    strength2 = random.randint(0,50) + await get_level(ctx.author.id) + kriddytoo_boost
 
-    strength3 = round(random.uniform(-5, 5) * (25 / (25 + await get_level(ctx.author.id))), 4)
-    strength4 = random.randint(0,50) + await get_level(ctx.author.id)
+    strength3 = round(random.uniform(-5, 5) * (25 / (25 + kriddytoo_boost + await get_level(ctx.author.id))), 4)
+    strength4 = random.randint(0,50) + await get_level(ctx.author.id) + kriddytoo_boost
 
     total_speed1 = 0
 
@@ -58,6 +61,9 @@ async def triple45(ctx, coords="0.0"):
         message = [f"**{ctx.author}**, you overshot the **{selected['name']}** by **{round(-unused_momentum,8)}**"]
         message.append(f"First turn to 0: **{strength1}**, second 45 initial angle: **{round(45 - (45 * (0.9708**strength2)), 6)}**")
         await ctx.send('\n'.join(map(str, message)))
+
+        await add_kriddytoo_shrine_boost(ctx.author.id, -1)
+        
         return
 
 
@@ -80,20 +86,28 @@ async def triple45(ctx, coords="0.0"):
 
     if (total_speed - unused_momentum) > (selected['distance'] - 0.6 ): #made jump
         message = [f"Congratulations! **{ctx.author}**, you did the **{selected['name']}** and earned **{selected['reward']}** :coin:."]
-        await add_coins(ctx.author.id, selected['reward'])
-        await add_xp(ctx.author.id, 25000, ctx)
+
     elif total_speed > (selected['distance'] - 0.6): #made distance
         message = [f"**{ctx.author}**, you failed but made distance of the **{selected['name']}**"]
-        await add_xp(ctx.author.id, 5000, ctx)
     else:
         message = [f"**{ctx.author}**, you failed the **{selected['name']}**"]
-        await add_xp(ctx.author.id, 250, ctx)
+        
     message.append(f"Offset: **{round(total_speed - unused_momentum + 0.6 - selected['distance'], 8)}**")
     message.append(f"Offset on distance: **{round(total_speed + 0.6 - selected['distance'], 8)}**")
     message.append(f"First turn to 0: **{strength1}**, second 45 initial angle: **{round(45 - (45 * (0.9708**strength2)), 6)}**")
     message.append(f"Second turn to 0: **{strength3}**, third 45 initial angle: **{round(45 - (45 * (0.9708**strength4)), 6)}**")
 
+    await add_kriddytoo_shrine_boost(ctx.author.id, -1)
+
     await ctx.send('\n'.join(map(str, message)))
+
+    if (total_speed - unused_momentum) > (selected['distance'] - 0.6):
+        await add_coins(ctx.author.id, selected['reward'])
+        await add_xp(ctx.author.id, 2500, ctx)
+    elif total_speed > (selected['distance'] - 0.6):
+        await add_xp(ctx.author.id, 1000, ctx)
+    else:
+        await add_xp(ctx.author.id, 100, ctx)
 
 def setup(bot):
     bot.add_command(triple45)

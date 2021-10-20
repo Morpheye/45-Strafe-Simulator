@@ -2,9 +2,7 @@ from discord.ext import commands
 import json
 import random
 import math
-from main import add_coins
-from main import add_xp
-from main import get_level
+from main import add_coins, add_xp, get_level
 
 single45file = open("jumps\single45s.json", "r")
 SINGLE45 = json.loads(single45file.read())
@@ -46,7 +44,7 @@ async def single45(ctx):
 
     await add_coins(ctx.author.id, selected['reward'])
 
-    await add_xp(ctx.author.id, 250, ctx)
+    await add_xp(ctx.author.id, 100, ctx)
 
 
 

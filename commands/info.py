@@ -9,9 +9,9 @@ async def info(ctx):
 
     em = discord.Embed(title = "Bot Information", description = "This is a bot created by Morpheye#9690, as a discord game meant to simulate 45 strafing in Minecraft Parkour.", color = ctx.author.color)
 
-    em.add_field(name = "Bot Development", value = "Morpheye#9690 \nbear_#7302")
+    em.add_field(name = "Development Assistance", value = "bear_#7302 \ndude_guy_boy#3136")
     em.add_field(name = "Physics Help", value = "mine_pvpkill#8588 \nlavalaph#7013 \nBenjamaster7#9895 \nSrock#4106")
-    em.add_field(name = "Programming Help", value = "dude_guy_boy#3136")
+    em.add_field(name = "Beta Testing", value = "TBD")
 
     await ctx.send(embed = em)
 
