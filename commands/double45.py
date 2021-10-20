@@ -44,7 +44,7 @@ async def double45(ctx):
             total_speed = total_speed + current_speed
 
         if total_speed > (selected['distance'] - 0.6):
-            await ctx.send(f"**{ctx.author}**, you did the **{selected['name']}** and earned **{selected['reward']}** coins. Your jump angle was **{round(jump_angle, 6)}** and your second 45 initial angle was **{round(45 - facing, 6)}**, and you made the jump by **{round((total_speed - (selected['distance'] - 0.6)), 6)}**")
+            await ctx.send(f"**{ctx.author}**, you did the **{selected['name']}** and earned **{selected['reward']}** :coin:. Your jump angle was **{round(jump_angle, 6)}** and your second 45 initial angle was **{round(45 - facing, 6)}**, and you made the jump by **{round((total_speed - (selected['distance'] - 0.6)), 6)}**")
             
             await add_coins(ctx.author.id, selected['reward'])
             await add_xp(ctx.author.id, 1000, ctx)
