@@ -86,7 +86,6 @@ async def triple45(ctx, coords="0.0"):
 
     if (total_speed - unused_momentum) > (selected['distance'] - 0.6 ): #made jump
         message = [f"Congratulations! **{ctx.author}**, you did the **{selected['name']}** and earned **{selected['reward']}** :coin:."]
-
     elif total_speed > (selected['distance'] - 0.6): #made distance
         message = [f"**{ctx.author}**, you failed but made distance of the **{selected['name']}**"]
     else:

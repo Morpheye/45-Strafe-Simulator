@@ -27,8 +27,6 @@ async def profile(ctx, target_id=None):
         except:
             target = ctx.author
 
-    
-
     db = sqlite3.connect('database.sqlite')
     cursor = db.cursor()
     cursor.execute(f"SELECT xp FROM users WHERE id = {target.id}")
