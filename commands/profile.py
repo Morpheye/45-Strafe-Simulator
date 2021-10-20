@@ -12,10 +12,9 @@ from main import get_xp
 async def profile(ctx):
 
 
-
     em = discord.Embed(title = f"Profile of **{ctx.author}**", description = f"{ctx.author}'s 45 strafe profile", color = ctx.author.color)
 
-    em.add_field(name = "Coins", value = await get_coins(ctx.author.id))
+    em.add_field(name = "Coins", value = f"{await get_coins(ctx.author.id)} :coin:")
 
     em.add_field(name = "Level", value = f"{await get_level(ctx.author.id)}\n(XP: {await get_xp(ctx.author.id)}/{((await get_level(ctx.author.id)) * 1000) + 1000})")
 
