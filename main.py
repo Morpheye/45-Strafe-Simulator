@@ -57,9 +57,11 @@ async def add_xp(id, xp, ctx):
     cursor.execute(f"SELECT level FROM users WHERE id = {id}")
     current_level = cursor.fetchone()
 
-    if current_xp >= ((current_level[0] * 1000) + 1000):
+    level_up_req = (10 * (current_level[0] ** 2)) + (1000 * current_level[0]) + 100
+
+    if current_xp >= (level_up_req):
         sql = ("UPDATE users SET xp = ? WHERE id = ?")
-        val = (current_xp - ((current_level[0] * 1000) + 1000), id)
+        val = (current_xp - (level_up_req), id)
         cursor.execute(sql, val)
 
         sql = ("UPDATE users SET level = ? WHERE id = ?")
@@ -124,6 +126,33 @@ async def get_level(id):
     db.close()
     return result[0]
 
+async def get_kriddytoo_shrine_boost(id):
+    db = sqlite3.connect('database.sqlite')
+    cursor = db.cursor()
+    cursor.execute(f"SELECT kriddytoo_shrine_boost FROM users WHERE id = {id}")
+    result = cursor.fetchone()
+    if result is None:
+        await add_user(id)
+    cursor.execute(f"SELECT kriddytoo_shrine_boost FROM users WHERE id = {id}")
+    result = cursor.fetchone()
+    db.commit()
+    cursor.close()
+    db.close()
+    return result[0]
+
+async def add_kriddytoo_shrine_boost(id, amount):
+    db = sqlite3.connect('database.sqlite')
+    cursor = db.cursor()
+    cursor.execute(f"SELECT kriddytoo_shrine_boost FROM users WHERE id = {id}")
+    result = cursor.fetchone()
+    if result is None:
+        await add_user(id)
+    sql = ("UPDATE users SET kriddytoo_shrine_boost = ? WHERE id = ?")
+    val = (result[0] + amount, id)
+    cursor.execute(sql, val)
+    db.commit()
+    cursor.close()
+    db.close()
 
 #stop console from logging "command not found"
 @bot.event
@@ -150,5 +179,6 @@ bot.load_extension('commands.test')
 bot.load_extension('commands.single45')
 bot.load_extension('commands.double45')
 bot.load_extension('commands.triple45')
+bot.load_extension('commands.pray')
 
 bot.run(TOKEN)

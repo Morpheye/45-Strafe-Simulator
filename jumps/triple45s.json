@@ -7,7 +7,7 @@
             "optimal_distance": 4.255997,
             "distance": 3.9375,
             "airtime": 9,
-            "reward": 440
+            "reward": 660
         },
         {
             "name": "(1t run) Tier 3 5jmm 4+1",
@@ -16,7 +16,7 @@
             "optimal_distance": 3.385291,
             "distance": 4,
             "airtime": 9,
-            "reward": 450
+            "reward": 675
         },
         {
             "name": "3bc 9bm 8-8",
@@ -25,7 +25,7 @@
             "optimal_distance": 3.929579,
             "distance": 8,
             "airtime": 22,
-            "reward": 470
+            "reward": 700
         },
         {
             "name": "19bm 8-8",
@@ -34,7 +34,7 @@
             "optimal_distance": 4.31555,
             "distance": 8,
             "airtime": 22,
-            "reward": 480
+            "reward": 720
         },
         {
             "name": "3bc 12bm 5-0.5 to wall",
@@ -43,7 +43,7 @@
             "optimal_distance": 3.987905,
             "distance": 5.25,
             "airtime": 13,
-            "reward": 525
+            "reward": 780
         },
         {
             "name": "3bc 19bm ladder to chest 5b",
@@ -52,7 +52,7 @@
             "optimal_distance": 4.012334,
             "distance": 4.9375,
             "airtime": 12,
-            "reward": 530
+            "reward": 800
         }
         
 
