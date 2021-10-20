@@ -79,7 +79,7 @@ async def triple45(ctx, coords="0.0"):
 
 
     if (total_speed - unused_momentum) > (selected['distance'] - 0.6 ): #made jump
-        message = [f"Congratulations! **{ctx.author}**, you did the **{selected['name']}** and earned **{selected['reward']}** coins."]
+        message = [f"Congratulations! **{ctx.author}**, you did the **{selected['name']}** and earned **{selected['reward']}** :coin:."]
         await add_coins(ctx.author.id, selected['reward'])
         await add_xp(ctx.author.id, 25000, ctx)
     elif total_speed > (selected['distance'] - 0.6): #made distance

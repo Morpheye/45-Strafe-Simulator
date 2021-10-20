@@ -12,9 +12,6 @@ load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
 
-configfile = open("config.json", "r")
-CONFIG = json.loads(configfile.read())
-
 bot = commands.Bot(command_prefix = "?", intents = discord.Intents.all(), activity = discord.Game(name = "MCPK"))
 bot.remove_command('help')
 

@@ -42,7 +42,7 @@ async def single45(ctx):
         if 'neo' in selected:
             total_speed = total_speed * random.randint(0,1)
 
-    await ctx.send(f"**{ctx.author}**, you did the **{selected['name']}** and earned **{selected['reward']}** coins. Your last 45 was **{round(45 - facing, 6)}**, and you made the jump by **{round((total_speed - (selected['distance'] - 0.6)), 6)}**")
+    await ctx.send(f"**{ctx.author}**, you did the **{selected['name']}** and earned **{selected['reward']}** :coin:. Your last 45 was **{round(45 - facing, 6)}**, and you made the jump by **{round((total_speed - (selected['distance'] - 0.6)), 6)}**")
 
     await add_coins(ctx.author.id, selected['reward'])
 
