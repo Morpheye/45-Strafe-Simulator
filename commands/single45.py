@@ -2,7 +2,7 @@ from discord.ext import commands
 import json
 import random
 import math
-from main import add_coins, add_xp, get_level
+from db_functions import add_coins, add_xp, get_level
 
 single45file = open("jumps\single45s.json", "r")
 SINGLE45 = json.loads(single45file.read())
