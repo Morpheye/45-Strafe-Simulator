@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from db_functions import add_coins, add_xp, get_level, get_kriddytoo_shrine_boost, add_kriddytoo_shrine_boost
 
 @commands.command(name = "test", description = "testing")
 @commands.bot_has_permissions(send_messages=True)

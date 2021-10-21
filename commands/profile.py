@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from main import get_coins, get_level, get_xp, get_kriddytoo_shrine_boost
+from db_functions import get_coins, get_level, get_xp, get_kriddytoo_shrine_boost
 from main import bot
 import sqlite3
 

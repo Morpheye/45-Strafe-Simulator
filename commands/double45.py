@@ -2,7 +2,7 @@ from discord.ext import commands
 import json
 import math
 import random
-from main import add_coins, add_xp, get_level, get_kriddytoo_shrine_boost, add_kriddytoo_shrine_boost
+from db_functions import add_coins, add_xp, get_level, get_kriddytoo_shrine_boost, add_kriddytoo_shrine_boost
 
 double45file = open("jumps\double45s.json", "r")
 DOUBLE45 = json.loads(double45file.read())
@@ -15,6 +15,7 @@ async def double45(ctx):
 
     if await get_kriddytoo_shrine_boost(ctx.author.id) > 0:
         kriddytoo_boost = 5
+        await add_kriddytoo_shrine_boost(ctx.author.id, -1)
     else:
         kriddytoo_boost = 0
 
@@ -49,7 +50,6 @@ async def double45(ctx):
         if total_speed > (selected['distance'] - 0.6):
             await ctx.send(f"**{ctx.author}**, you did the **{selected['name']}** and earned **{selected['reward']}** :coin:. Your jump angle was **{round(jump_angle, 6)}** and your second 45 initial angle was **{round(45 - facing, 6)}**, and you made the jump by **{round((total_speed - (selected['distance'] - 0.6)), 6)}**")
             
-            await add_kriddytoo_shrine_boost(ctx.author.id, -1)
             await add_coins(ctx.author.id, selected['reward'])
             await add_xp(ctx.author.id, 300, ctx)
             return
@@ -58,7 +58,6 @@ async def double45(ctx):
 
     await ctx.send(f"**{ctx.author}**, you failed the **{selected['name']}**. Your jump angle was **{round(jump_angle, 6)}** and your second 45 initial angle was **{round(45 - facing, 6)}**, and you missed the jump by **{round((total_speed - (selected['distance'] - 0.6)), 6)}**")
     await add_xp(ctx.author.id, 100, ctx)
-    await add_kriddytoo_shrine_boost(ctx.author.id, -1)
 
 def setup(bot):
     bot.add_command(double45)

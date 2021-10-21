@@ -2,7 +2,7 @@ from discord.ext import commands
 import json
 import random
 import math
-from main import add_coins, add_xp, get_level, get_kriddytoo_shrine_boost, add_kriddytoo_shrine_boost
+from db_functions import add_coins, add_xp, get_level, get_kriddytoo_shrine_boost, add_kriddytoo_shrine_boost
 
 triple45file = open("jumps\\triple45s.json", "r")
 TRIPLE45 = json.loads(triple45file.read())
@@ -22,6 +22,7 @@ async def triple45(ctx, coords="0.0"):
 
     if await get_kriddytoo_shrine_boost(ctx.author.id) > 0:
         kriddytoo_boost = 5
+        await add_kriddytoo_shrine_boost(ctx.author.id, -1)
     else:
         kriddytoo_boost = 0
 
@@ -62,7 +63,7 @@ async def triple45(ctx, coords="0.0"):
         message.append(f"First turn to 0: **{strength1}**, second 45 initial angle: **{round(45 - (45 * (0.9708**strength2)), 6)}**")
         await ctx.send('\n'.join(map(str, message)))
 
-        await add_kriddytoo_shrine_boost(ctx.author.id, -1)
+    
         
         return
 
@@ -97,7 +98,6 @@ async def triple45(ctx, coords="0.0"):
     message.append(f"First turn to 0: **{strength1}**, second 45 initial angle: **{round(45 - (45 * (0.9708**strength2)), 6)}**")
     message.append(f"Second turn to 0: **{strength3}**, third 45 initial angle: **{round(45 - (45 * (0.9708**strength4)), 6)}**")
 
-    await add_kriddytoo_shrine_boost(ctx.author.id, -1)
 
     await ctx.send('\n'.join(map(str, message)))
 

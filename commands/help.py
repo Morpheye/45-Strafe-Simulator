@@ -10,6 +10,7 @@ async def help(ctx):
 
     em.add_field(name = "Information", value = "help \ninfo \nprofile")
     em.add_field(name = "Coin Making", value = "single45 \ndouble45 \ntriple45 \npray")
+    em.add_field(name = "Items", value = "shop \nbuy \ninventory")
 
     await ctx.send(embed = em)
 

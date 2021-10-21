@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from main import add_kriddytoo_shrine_boost, get_level
+from db_functions import add_kriddytoo_shrine_boost, get_level
 import random
 
 @commands.command(name = "pray", aliases = ["kriddytooshrine"], description = "Pray to the KRiddytoo shrine")
