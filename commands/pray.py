@@ -18,7 +18,7 @@ async def pray(ctx):
 
     em = discord.Embed(title = "KRiddytoo Shrine", description = f"{ctx.author}, you prayed to the KRiddytoo shrine.", color = ctx.author.color)
 
-    em.add_field(name = "**Precision Boost**", value = f"Your next **{amount}** double or triple 45s will be slightly boosted in precision.")
+    em.add_field(name = "**Rewards**", value = f"Your next **{amount}** double or triple 45s will be slightly boosted in precision.")
 
     await ctx.send(embed = em)
 

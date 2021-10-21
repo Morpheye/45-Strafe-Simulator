@@ -1,7 +1,6 @@
 import sqlite3
 import discord
 
-
 async def add_user(id):
     db = sqlite3.connect('database.sqlite')
     cursor = db.cursor()
@@ -202,17 +201,18 @@ async def get_shop_item(item):
     db.close()
     return item
 
-async def add_item(id, item_name, amount, emoji, description):
+async def add_item(id, item_name, amount, emoji, description, price):
     db = sqlite3.connect('database.sqlite')
     cursor = db.cursor()
     cursor.execute(f"SELECT amount FROM items WHERE id = {id} AND name = '{item_name}'")
     result = cursor.fetchone()
     if result is None:
-        sql = ("INSERT INTO items(id, name, amount, emoji, description) VALUES(?,?,?,?,?)")
-        val = (id, item_name, amount, emoji, description)
+        sql = ("INSERT INTO items(id, name, amount, emoji, description, price) VALUES(?,?,?,?,?,?)")
+        val = (id, item_name, amount, emoji, description, price)
         cursor.execute(sql, val)
     else:
         cursor.execute(f"UPDATE items SET amount = {result[0] + amount} WHERE id = {id} AND name = '{item_name}'")
+    cursor.execute("DELETE FROM items WHERE amount = 0")
     db.commit()
     cursor.close()
     db.close()

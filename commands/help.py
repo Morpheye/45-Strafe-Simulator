@@ -9,8 +9,8 @@ async def help(ctx):
     em = discord.Embed(title = "Help", description = "This is the full list of bot commands", color = ctx.author.color)
 
     em.add_field(name = "Information", value = "help \ninfo \nprofile")
-    em.add_field(name = "Coin Making", value = "single45 \ndouble45 \ntriple45 \npray")
-    em.add_field(name = "Items", value = "shop \nbuy \ninventory")
+    em.add_field(name = "Coin Making", value = "single45 \ndouble45 \ntriple45 \npray \ntrivia")
+    em.add_field(name = "Items", value = "shop \nbuy \ninventory \nsell")
 
     await ctx.send(embed = em)
 

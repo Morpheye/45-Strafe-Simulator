@@ -6,7 +6,7 @@ from db_functions import add_coins, get_level, get_coins, get_kriddytoo_shrine_b
 @commands.bot_has_permissions(send_messages=True)
 @commands.guild_only()
 @commands.cooldown(1, 5, commands.BucketType.user)
-async def buy(ctx, choice="null"):
+async def buy(ctx, choice="null", amount="1"):
 
     if await get_level(ctx.author.id) < 2:
         return await ctx.send(f"**{ctx.author}**, buying items requires **level 2**")
@@ -17,17 +17,25 @@ async def buy(ctx, choice="null"):
     item = await get_shop_item(choice)
     if item is None:
         return await ctx.send(f"**{ctx.author}**, that item is not in the shop!")
+
+    try:
+        amount = int(amount)
+        if amount < 1:
+            return await ctx.send(f"**{ctx.author}**, **\"{amount}\"** is not a valid amount.")
+    except:
+        return await ctx.send(f"**{ctx.author}**, **\"{amount}\"** is not a valid amount.")
+
     
     if await get_level(ctx.author.id) < item['level_req']:
         return await ctx.send(f"**{ctx.author}**, you are not high enough level to buy that item! \nLevel: **{await get_level(ctx.author.id)} / {item['level_req']}**")
 
-    if await get_coins(ctx.author.id) < item['price']:
-        return await ctx.send(f"**{ctx.author}**, you cannot afford that item! \nCoins missing: **{item['price'] - await get_coins(ctx.author.id)}** :coin:")
+    if await get_coins(ctx.author.id) < item['price'] * amount:
+        return await ctx.send(f"**{ctx.author}**, you cannot afford item(s)! \nCoins missing: **{item['price'] * amount - await get_coins(ctx.author.id)}** :coin:")
 
-    await add_item(ctx.author.id, item['name'], 1, item['emoji'], item['description'])
-    await add_coins(ctx.author.id, (-1 * item['price']))
+    await add_item(ctx.author.id, item['name'], amount, item['emoji'], item['description'], item['price'])
+    await add_coins(ctx.author.id, (-1 * item['price'] * amount))
 
-    await ctx.send(f"**{ctx.author}**, you successfully purchased **{item['name']}** for **{item['price']}** :coin:")
+    await ctx.send(f"**{ctx.author}**, you successfully purchased **{item['name']} {item['emoji']}** **x {amount}** for **{item['price'] * amount}** :coin:")
 
 
 def setup(bot):
