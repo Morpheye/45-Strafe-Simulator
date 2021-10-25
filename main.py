@@ -32,7 +32,10 @@ async def on_ready():
 
 #commands
 for file in os.listdir("commands/"):
-    bot.load_extension(f"commands.{file[:-3]}")
+    if file == "__pycache__":
+        pass
+    else:
+        bot.load_extension(f"commands.{file[:-3]}")
 
 bot.run(TOKEN)
 
