@@ -31,21 +31,8 @@ async def on_ready():
     print(f"Logged in as {bot.user}!")
 
 #commands
-bot.load_extension('commands.help')
-bot.load_extension('commands.info')
-bot.load_extension('commands.profile')
-bot.load_extension('commands.test')
-
-bot.load_extension('commands.single45')
-bot.load_extension('commands.double45')
-bot.load_extension('commands.triple45')
-bot.load_extension('commands.pray')
-bot.load_extension('commands.trivia')
-
-bot.load_extension('commands.shop')
-bot.load_extension('commands.buy')
-bot.load_extension('commands.inventory')
-bot.load_extension('commands.sell')
+for file in os.listdir("commands/"):
+    bot.load_extension(f"commands.{file[:-3]}")
 
 bot.run(TOKEN)
 
