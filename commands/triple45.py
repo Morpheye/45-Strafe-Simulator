@@ -17,8 +17,8 @@ async def triple45(ctx, coords="0.0"):
     except:
         coords = 0.0
 
-    if await get_level(ctx.author.id) < 20:
-        return await ctx.send(f"**{ctx.author}**, triple 45ing requires **level 20**")
+    if await get_level(ctx.author.id) < 15:
+        return await ctx.send(f"**{ctx.author}**, triple 45ing requires **level 15**")
 
     if await get_kriddytoo_shrine_boost(ctx.author.id) > 0:
         kriddytoo_boost = 5

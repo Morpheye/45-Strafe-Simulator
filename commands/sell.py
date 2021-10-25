@@ -31,7 +31,7 @@ async def sell(ctx, choice="null", amount="1"):
 
     #check if item exists
     cursor.execute(f"SELECT name FROM items WHERE id = {ctx.author.id} AND name = '{choice}'")
-    result = cursor.fetchall()
+    result = cursor.fetchone()
     if result is None:
         db.commit()
         cursor.close()
@@ -65,7 +65,6 @@ async def sell(ctx, choice="null", amount="1"):
 
     cursor.execute(f"SELECT * FROM items WHERE id = {ctx.author.id} AND name = '{choice}'")
     result = cursor.fetchone()
-    print(result)
 
     item = {}
     item['name'] = result[1]

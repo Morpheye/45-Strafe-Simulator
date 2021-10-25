@@ -19,7 +19,7 @@ async def shop(ctx, page='1'):
     db = sqlite3.connect('database.sqlite')
     cursor = db.cursor()
     cursor.execute(f"SELECT name FROM items WHERE id = {ctx.author.id}")
-    result = cursor.fetchall()
+    result = cursor.fetchone()
     if result is None:
         return await ctx.send(f"**{ctx.author}**, your inventory is empty.")
 

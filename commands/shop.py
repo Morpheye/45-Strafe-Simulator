@@ -24,7 +24,7 @@ async def shop(ctx, page='1'):
         try:
             item = await get_shop_item_index((page_number * 5) + i)
             if item['level_req'] <= await get_level(ctx.author.id):
-                em.add_field(name = f"{item['name']} {item['emoji']}", value = f"Price: **{item['price']}**\nLevel Req: **{item['level_req']}**\n`{item['description']}`")
+                em.add_field(name = f"{item['name']} {item['emoji']}", value = f"Price: **{item['price']} :coin:**\nLevel Req: **{item['level_req']}**\n`{item['description']}`")
         except:
             pass
     
