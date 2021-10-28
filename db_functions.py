@@ -1,5 +1,6 @@
 import sqlite3
 import discord
+import random
 
 async def add_user(id):
     db = sqlite3.connect('database.sqlite')
@@ -217,3 +218,64 @@ async def add_item(id, item_name, amount, emoji, description, price):
     cursor.close()
     db.close()
     return
+
+async def set_strikes(id, amount):
+    db = sqlite3.connect('database.sqlite')
+    cursor = db.cursor()
+    cursor.execute(f"SELECT strikes FROM users WHERE id = {id}")
+    result = cursor.fetchone()
+    if result is None:
+        await add_user(id)
+    sql = ("UPDATE users SET strikes = ? WHERE id = ?")
+    val = (amount, id)
+    cursor.execute(sql, val)
+    db.commit()
+    cursor.close()
+    db.close()
+
+async def get_strikes(id):
+    db = sqlite3.connect('database.sqlite')
+    cursor = db.cursor()
+    cursor.execute(f"SELECT strikes FROM users WHERE id = {id}")
+    result = cursor.fetchone()
+    if result is None:
+        await add_user(id)
+    cursor.execute(f"SELECT strikes FROM users WHERE id = {id}")
+    result = cursor.fetchone()
+    db.commit()
+    cursor.close()
+    db.close()
+    return result[0]
+
+async def captcha(ctx, id, bot):
+    number_str = ""
+    for i in range(5):
+        number_str += str(random.randint(0,9))
+
+    em = discord.Embed(title = "CAPTCHA", description = f"**{ctx.author}**, a wild **btff** approaches. Please type the captcha shown below.", color = ctx.author.color)
+    em.add_field(name = "Captcha:", value = number_str)
+
+    await ctx.send(embed = em)
+
+    msg = await bot.wait_for("message", check = lambda m: m.author == ctx.author and m.channel == ctx.channel)
+    if msg.content != number_str:
+        if await get_strikes(id) < 2:
+            await set_strikes(id, (await get_strikes(id) + 1))
+            em = discord.Embed(title = "CAPTCHA FAIL", description = f"**{ctx.author}**, you failed the captcha and have been accused of macroing.", color = ctx.author.color)
+            em.add_field(name = "Current Strikes:", value = f"{await get_strikes(id)}/3")
+
+            await ctx.send(embed = em)
+        else:
+            await set_strikes(id, 0)
+            await add_coins(id, -(await get_coins(id)))
+            await add_xp(id, -(await get_xp(id)), ctx)
+            em = discord.Embed(title = "CAPTCHA FAIL", description = f"**{ctx.author}**, you failed the captcha were convicted of macroing. Your coins and current xp have been reset.", color = ctx.author.color)
+            em.add_field(name = "Current Strikes:", value = f"{await get_strikes(id)}/3")
+
+            await ctx.send(embed = em)
+        return
+    await set_strikes(id, 0)
+    em = discord.Embed(title = "CAPTCHA SUCCESS", description = f"**{ctx.author}**, you passed the captcha, and existing strikes have been reset.", color = ctx.author.color)
+    em.add_field(name = "Current Strikes:", value = f"{await get_strikes(id)}/3")
+
+    await ctx.send(embed = em)

@@ -2,7 +2,8 @@ from discord.ext import commands
 import json
 import random
 import math
-from db_functions import add_coins, add_xp, get_level, get_kriddytoo_shrine_boost, add_kriddytoo_shrine_boost
+from main import bot
+from db_functions import add_coins, add_xp, get_level, get_kriddytoo_shrine_boost, add_kriddytoo_shrine_boost, captcha
 
 triple45file = open("jumps\\triple45s.json", "r")
 TRIPLE45 = json.loads(triple45file.read())
@@ -108,6 +109,10 @@ async def triple45(ctx, coords="0.0"):
         await add_xp(ctx.author.id, 1000, ctx)
     else:
         await add_xp(ctx.author.id, 100, ctx)
+
+    if random.randint(1, 250) == 1:
+        await captcha(ctx, ctx.author.id, bot)
+
 
 def setup(bot):
     bot.add_command(triple45)

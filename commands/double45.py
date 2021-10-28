@@ -2,7 +2,8 @@ from discord.ext import commands
 import json
 import math
 import random
-from db_functions import add_coins, add_xp, get_level, get_kriddytoo_shrine_boost, add_kriddytoo_shrine_boost
+from main import bot
+from db_functions import add_coins, add_xp, get_level, get_kriddytoo_shrine_boost, add_kriddytoo_shrine_boost, captcha
 
 double45file = open("jumps\double45s.json", "r")
 DOUBLE45 = json.loads(double45file.read())
@@ -58,6 +59,9 @@ async def double45(ctx):
 
     await ctx.send(f"**{ctx.author}**, you failed the **{selected['name']}**. Your jump angle was **{round(jump_angle, 6)}** and your second 45 initial angle was **{round(45 - facing, 6)}**, and you missed the jump by **{round((total_speed - (selected['distance'] - 0.6)), 6)}**")
     await add_xp(ctx.author.id, 100, ctx)
+
+    if random.randint(1, 250) == 1:
+        await captcha(ctx, ctx.author.id, bot)
 
 def setup(bot):
     bot.add_command(double45)

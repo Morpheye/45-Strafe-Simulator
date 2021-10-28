@@ -2,7 +2,9 @@ from discord.ext import commands
 import json
 import random
 import math
-from db_functions import add_coins, add_xp, get_level
+import discord
+from main import bot
+from db_functions import add_coins, add_xp, get_level, captcha
 
 single45file = open("jumps\single45s.json", "r")
 SINGLE45 = json.loads(single45file.read())
@@ -46,7 +48,10 @@ async def single45(ctx):
 
     await add_xp(ctx.author.id, 100, ctx)
 
+    if random.randint(1, 250) == 1:
+        await captcha(ctx, ctx.author.id, bot)
 
 
 def setup(bot):
     bot.add_command(single45)
+

@@ -36,7 +36,7 @@ async def trivia(ctx):
     db.close()
 
 
-    em = discord.Embed(title = f"**{ctx.author}**'s Trivia Game", description = f"{question} (Difficulty: **{difficulty}/10**)\n(Answer with 1, 2, 3, or 4, you have 10 seconds.)", color = ctx.author.color)
+    em = discord.Embed(title = f"**{ctx.author}**'s Trivia Game", description = f"{question} (Difficulty: **{difficulty}/10**)\n(Answer with 1, 2, 3, or 4, you have 20 seconds.)", color = ctx.author.color)
 
     for i in range(correct_index - 1):
         em.add_field(name = f"#{i + 1}", value = incorrect[i])
@@ -47,7 +47,7 @@ async def trivia(ctx):
     await ctx.send(embed = em)
 
     try:
-        msg = await bot.wait_for("message", check = lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout = 10)
+        msg = await bot.wait_for("message", check = lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout = 20)
         try:
             if int(msg.content) != correct_index:
                 await ctx.send(f"**{ctx.author}** nice try you answered incorrectly, the correct answer was **{correct}**")

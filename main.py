@@ -31,9 +31,10 @@ async def on_ready():
     print(f"Logged in as {bot.user}!")
 
 #commands
+
 for file in os.listdir("commands/"):
     if file == "__pycache__":
-        pass
+        continue
     else:
         bot.load_extension(f"commands.{file[:-3]}")
 
