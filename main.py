@@ -1,10 +1,12 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands import CommandNotFound
-from discord.ext.commands.errors import CommandOnCooldown
+from discord.ext.commands.errors import *
 import sqlite3
 import os
 from dotenv import load_dotenv
+import random
+from datetime import datetime
 
 load_dotenv()
 #environment variables
@@ -22,6 +24,9 @@ async def on_command_error(ctx, error):
     elif isinstance(error, CommandOnCooldown):
         await ctx.send(f"You must wait **{error.retry_after:.2f}** seconds before doing this again, **{ctx.author}**")
         return
+    elif isinstance(error, NotOwner):
+        await ctx.send(f"**{ctx.author} GET THE FUCK OUT OF HERE. RIGHT NOW.**")
+        return
     raise error
  
 @bot.event
@@ -30,7 +35,49 @@ async def on_ready():
     cursor = database.cursor()
     print(f"Logged in as {bot.user}!")
 
-#commands
+text = [
+    "BWMM",
+    "Pandora's Box",
+    "GCXV",
+    "Arcade3",
+    "Triple 45 Strafe Journey",
+    "Facade",
+    "The Consistency Trial",
+    "Onejump Lobby",
+    "Linkcraft",
+    "Huhucraft",
+    "Jumpcraft",
+    "Omega Parkour",
+    "45 Strafe Journey",
+    "Bonus 11",
+    "Hypixel Parkour Duels",
+    "Hypixel Housing",
+    "Dream Dating Simulator",
+    ]
+
+@tasks.loop(minutes = 30)
+async def change_presence():
+    await bot.change_presence(activity = discord.Game(name = random.choice(text)))
+
+@tasks.loop(seconds = 30)
+async def reset_dailies():
+    if datetime.now().hour == 0 and datetime.now().minute == 0:
+        db = sqlite3.connect('database.sqlite')
+        cursor = db.cursor()
+        cursor.execute(f"SELECT * FROM users")
+        result = cursor.fetchall()
+        for row in result:
+            if row[6] == 0:
+                cursor.execute(f"UPDATE users SET daily_streak = 0 WHERE id = {row[0]}")
+            cursor.execute(f"UPDATE users SET has_claimed_daily = 0 WHERE id = {row[0]}")
+        db.commit()
+        cursor.close()
+        db.close()
+
+@change_presence.before_loop
+async def before():
+    print("Waiting")
+    await bot.wait_until_ready()
 
 for file in os.listdir("commands/"):
     if file == "__pycache__":
@@ -38,5 +85,6 @@ for file in os.listdir("commands/"):
     else:
         bot.load_extension(f"commands.{file[:-3]}")
 
-bot.run(TOKEN)
 
+change_presence.start()
+bot.run(TOKEN)
