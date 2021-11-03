@@ -25,7 +25,11 @@ async def shop(ctx, page='1'):
 
     cursor.execute("DELETE FROM items WHERE amount = 0")
     
+    cursor.execute(f"SELECT name FROM items WHERE id = {ctx.author.id}")
+    result = cursor.fetchall()
+
     em = discord.Embed(title = f"{ctx.author}'s Inventory", description = f"Page {page_number+1} of your inventory, items listed below.", color = ctx.author.color)
+
 
     for i in range(5):
         try:
@@ -41,7 +45,7 @@ async def shop(ctx, page='1'):
             cursor.execute(f"SELECT price FROM items WHERE id = {ctx.author.id}")
             price = cursor.fetchall()[index]
 
-
+            
             item = {}
             item['name'] = name[0]
             item['amount'] = amount[0]
@@ -49,7 +53,8 @@ async def shop(ctx, page='1'):
             item['description'] = description[0]
             item['price'] = price[0]
 
-            em.add_field(name = f"{item['name']} {item['emoji']} x {item['amount']}\n(Worth: **{item['price']} :coin:**)", value = f"`{item['description']}`")
+
+            em.add_field(name = f"{item['name']} {item['emoji']} x {item['amount']}\n(Worth: **{item['price']} :coin:**)", value = f"```{item['description']}```", inline = False)
         
         except:
             pass

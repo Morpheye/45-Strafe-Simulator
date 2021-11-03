@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from db_functions import get_level
+from db_functions import get_level, add_coins
 from datetime import datetime, timedelta
 import sqlite3
 
@@ -28,17 +28,22 @@ async def daily(ctx):
 
         em.add_field(name = "Next Daily:", value = next_daily)
 
+        db.commit()
+        cursor.close()
+        db.close()
         return await ctx.send(embed = em)
+
 
     else:
         cursor.execute(f"SELECT daily_streak FROM users WHERE id = {ctx.author.id}")
         streak = cursor.fetchone()[0] + 1
         cursor.execute(f"UPDATE users SET daily_streak = {streak} WHERE id = {ctx.author.id}")
-
+        reward = 10 * (await get_level(ctx.author.id) + streak + 10)
 
         em = discord.Embed(title = "Daily", description =f"**{ctx.author}**, you claimed your daily reward.", color = ctx.author.color)
 
-        em.add_field(name = "Streak:", value = f"Current Streak: {streak}")
+        em.add_field(name = "Rewards:", value = f"You received **{reward} :coin:**")
+        em.add_field(name = "Streak:", value = f"Current Streak: **{streak}**")
         em.add_field(name = "Next Daily:", value = next_daily)
 
         await ctx.send(embed = em)
@@ -47,10 +52,16 @@ async def daily(ctx):
         val = (1, ctx.author.id)
         cursor.execute(sql, val)
 
+        db.commit()
+        cursor.close()
+        db.close()
 
-    db.commit()
-    cursor.close()
-    db.close()
+        await add_coins(ctx.author.id, reward)
+
+
+
+
+
 
 def setup(bot):
     bot.add_command(daily)

@@ -76,7 +76,7 @@ async def sell(ctx, choice="null", amount="1"):
 
     await add_item(ctx.author.id, item['name'], (-1 * amount), item['emoji'], item['description'], item['price'])
     await add_coins(ctx.author.id, (amount * item['price']))
-    await ctx.send(f"**{ctx.author}**, you successfully sold **{item['name']} {item['emoji']}** **x {amount}** for **{item['price'] * amount}** :coin:")
+    await ctx.send(f"**{ctx.author}**, you successfully sold **{item['name']} {item['emoji']}** **x {amount}** for **{int(item['price']) * amount}** :coin:")
 
     db.commit()
     cursor.close()

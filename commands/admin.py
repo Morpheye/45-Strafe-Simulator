@@ -8,24 +8,42 @@ from datetime import datetime
 @commands.guild_only()
 @commands.is_owner()
 @commands.cooldown(1, 1, commands.BucketType.user)
-async def admin(ctx):
-    if datetime.now().hour == 21 and datetime.now().minute == 47:
-        await ctx.send("Balls")
-    await ctx.send(datetime.now().hour)
-    await ctx.send(datetime.now().minute)
+async def admin(ctx, args=None):
+    if args is None:
+        return await ctx.send("```Please input arguments.```")
 
-    #db = sqlite3.connect('database.sqlite')
-    #cursor = db.cursor()
-    #cursor.execute(f"SELECT * FROM users")
-    #result = cursor.fetchall()
-    #for row in result:
+    if args == "dailyreset":
+        db = sqlite3.connect('database.sqlite')
+        cursor = db.cursor()
+        cursor.execute(f"SELECT * FROM users")
+        result = cursor.fetchall()
+        for row in result:
+            print(f"{row[0]} {row[6]}")
+            if row[6] == 0:
+                cursor.execute(f"UPDATE users SET daily_streak = 0 WHERE id = {row[0]}")
+            cursor.execute(f"UPDATE users SET has_claimed_daily = 0 WHERE id = {row[0]}")
+        print("Dailies have been reset!")
+        await ctx.send("```Dailies have been reset!```")
+        db.commit()
+        cursor.close()
+        db.close()
 
-    #    if row[6] == 0:
-    #        cursor.execute(f"UPDATE users SET daily_streak = 0 WHERE id = {row[0]}")
-    #    cursor.execute(f"UPDATE users SET has_claimed_daily = 0 WHERE id = {row[0]}")
-    #db.commit()
-    #cursor.close()
-    #db.close()
+    if args == "test":
+        canvas = '''
+        :black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square:
+:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square:
+:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square:
+:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square:
+:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square:
+:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::red_square::black_large_square::black_large_square::black_large_square:
+:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::green_square::green_square::green_square::green_square::black_large_square::black_large_square:
+:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::green_square::green_square::green_square::green_square::green_square::green_square::black_large_square:
+:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::black_large_square:
+:black_large_square::blue_square::black_large_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square:
+:green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square:'''
+        em = discord.Embed(title = "Test Canvas", description = canvas, color = ctx.author.color)
+        em.add_field(name = "Name", value = "Value")
+        await ctx.send(embed = em)
 
 
 def setup(bot):

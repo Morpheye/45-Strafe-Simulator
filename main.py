@@ -59,7 +59,7 @@ text = [
 async def change_presence():
     await bot.change_presence(activity = discord.Game(name = random.choice(text)))
 
-@tasks.loop(seconds = 30)
+@tasks.loop(minutes = 1)
 async def reset_dailies():
     if datetime.now().hour == 0 and datetime.now().minute == 0:
         db = sqlite3.connect('database.sqlite')
@@ -70,13 +70,14 @@ async def reset_dailies():
             if row[6] == 0:
                 cursor.execute(f"UPDATE users SET daily_streak = 0 WHERE id = {row[0]}")
             cursor.execute(f"UPDATE users SET has_claimed_daily = 0 WHERE id = {row[0]}")
+        print("Dailies have been reset!")
         db.commit()
         cursor.close()
         db.close()
 
 @change_presence.before_loop
+@reset_dailies.before_loop
 async def before():
-    print("Waiting")
     await bot.wait_until_ready()
 
 for file in os.listdir("commands/"):
@@ -87,4 +88,5 @@ for file in os.listdir("commands/"):
 
 
 change_presence.start()
+reset_dailies.start()
 bot.run(TOKEN)
