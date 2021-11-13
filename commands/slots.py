@@ -43,35 +43,35 @@ async def slots(ctx):
     if slot1 == slot2 and slot2 == slot3:
         if slot1 == "gem":
             await add_item(ctx.author.id, "gem", 3, ":gem:", "Rare collectable item, has no use.", 500)
-            text = f"You got three of a kind and won 3x **{slot1}**"
+            text = f"You got three of a kind and won **3x {slot1}**"
         elif slot1 == "moneybag":
             await add_coins(ctx.author.id, 300)
             text = f"You got three of a kind and won **300** :coin:"
         else:
             await add_item(ctx.author.id, slot1, 3, f":{slot1}:", "Collectable item, has no use.", 20)
-            text = f"You got three of a kind and won 3x **{slot1}**"
+            text = f"You got three of a kind and won **3x {slot1}**"
 
     elif slot1 == slot2 or slot2 == slot3:
         if slot2 == "gem":
             await add_item(ctx.author.id, "gem", 1, ":gem:", "Rare collectable item, has no use.", 500)
-            text = f"You got one of a kind and won 1x **{slot2}**"
+            text = f"You got one of a kind and won **1x {slot2}**"
         elif slot2 == "moneybag":
             await add_coins(ctx.author.id, 100)
             text = f"You got one of a kind and won **100** :coin:"
         else:
-            await add_item(ctx.author.id, slot1, 1, f":{slot1}:", "Collectable item, has no use.", 20)
-            text = f"You got one of a kind and won 1x **{slot2}**"
+            await add_item(ctx.author.id, slot2, 1, f":{slot2}:", "Collectable item, has no use.", 20)
+            text = f"You got one of a kind and won **1x {slot2}**"
 
     elif slot1 == slot3:
         if slot3 == "gem":
             await add_item(ctx.author.id, "gem", 1, ":gem:", "Rare collectable item, has no use.", 500)
-            text = f"You got one of a kind and won 1x **{slot3}**"
+            text = f"You got one of a kind and won **1x {slot3}**"
         elif slot3 == "moneybag":
             await add_coins(ctx.author.id, 100)
             text = f"You got one of a kind and won **100** :coin:"
         else:
-            await add_item(ctx.author.id, slot1, 1, f":{slot1}:", "Collectable item, has no use.", 20)
-            text = f"You got one of a kind and won 1x **{slot3}**"
+            await add_item(ctx.author.id, slot3, 1, f":{slot3}:", "Collectable item, has no use.", 20)
+            text = f"You got one of a kind and won **1x {slot3}**"
 
     else:
         text = "Nothing was matching. Better luck next time!"

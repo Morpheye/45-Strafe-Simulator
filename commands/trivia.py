@@ -48,27 +48,33 @@ async def trivia(ctx):
 
     try:
         msg = await bot.wait_for("message", check = lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout = 20)
-        try:
-            if int(msg.content) != correct_index:
-                await ctx.send(f"**{ctx.author}** nice try you answered incorrectly, the correct answer was **{correct}**")
+        if(msg.content.isnumeric()):
+            if(int(msg.content) > 0 and int(msg.content) < 5):
+                if(int(msg.content) == correct_index):
+                    reward = random.randint(10, 20) * difficulty
+
+                    await ctx.send(f"**{ctx.author}** congratulations you answered correctly, you earned **{reward}** :coin:")
+                    await add_coins(ctx.author.id, reward)
+                    await add_xp(ctx.author.id, (150 + (difficulty * 10)), ctx)
+
+                    return
+                else:
+                    await ctx.send(f"**{ctx.author}** nice try you answered incorrectly, the correct answer was **{correct}**")
+                    await add_xp(ctx.author.id, (100), ctx)
+
+                    return
+            else:
+                await ctx.send(f"**{ctx.author}** please choose an answer between 1 through 4.")
                 await add_xp(ctx.author.id, (100), ctx)
 
                 return
-        except:
-            await ctx.send(f"**{ctx.author}** nice try you answered incorrectly, the correct answer was **{correct}**")
+        else:
+            await ctx.send(f"**{ctx.author}** that's not a valid answer, smart one.")
             await add_xp(ctx.author.id, (100), ctx)
 
             return
-
-        reward = random.randint(10, 20) * difficulty
-
-        await ctx.send(f"**{ctx.author}** congratulations you answered correctly, you earned **{reward}** :coin:")
-        await add_coins(ctx.author.id, reward)
-        await add_xp(ctx.author.id, (150 + (difficulty * 10)), ctx)
     except:
         await ctx.send(f"**{ctx.author}**, you ran out of time")
-
-
 
 
 def setup(bot):

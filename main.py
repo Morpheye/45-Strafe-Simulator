@@ -22,7 +22,7 @@ async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
         return
     elif isinstance(error, CommandOnCooldown):
-        await ctx.send(f"You must wait **{error.retry_after:.2f}** seconds before doing this again, **{ctx.author}**")
+        await ctx.send(f"You must wait **{error.retry_after:.2f}** seconds before doing this again, **{ctx.author}**", delete_after = 5)
         return
     elif isinstance(error, NotOwner):
         await ctx.send(f"**{ctx.author} GET THE FUCK OUT OF HERE. RIGHT NOW.**")

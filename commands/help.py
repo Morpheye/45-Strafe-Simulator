@@ -9,7 +9,7 @@ async def help(ctx):
     em = discord.Embed(title = "Help", description = "This is the full list of bot commands", color = ctx.author.color)
 
     em.add_field(name = "Information", value = "`help` `info` `profile`", inline = False)
-    em.add_field(name = "Coin Making", value = "`single45` `double45` `triple45` `pray` `trivia`", inline = False)
+    em.add_field(name = "Coin Making", value = "`single45` `double45` `triple45` `daily` `pray` `trivia`", inline = False)
     em.add_field(name = "Items", value = "`shop` `buy` `inventory` `sell`", inline = False)
     em.add_field(name = "Gambling", value = "`coinflip` `slots`", inline = False)
 
