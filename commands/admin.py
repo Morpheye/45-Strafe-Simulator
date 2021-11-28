@@ -16,53 +16,7 @@ async def admin(ctx, subcommand=None, args1=None, args2=None, args3=None):
         return await ctx.send("```Please input arguments.```")
 
     if subcommand == "test":
-
-        if float(args1) < 0.0:
-            facing = 180 * (math.pi / 180)
-        else:
-            facing = 0 * (math.pi / 180)
-
-        trajectory = []
-
-        #tick 1
-        jump_speed_x = abs(float(args1)) * math.cos(facing)
-        jump_speed_y = abs(float(args2))
-        airtime = int(args3)
-
-        total_speed_x = jump_speed_x
-        total_speed_y = jump_speed_y
-
-        print(f"B/T Speed: {jump_speed_x}, {jump_speed_y}, Total Speed: {total_speed_x}, {total_speed_y}")
-        trajectory.append((round(total_speed_x),round(total_speed_y)))
-
-        jump_speed_x = (jump_speed_x * 0.91 * 0.6) + (0.02 * 1.3 * math.cos(facing))
-        jump_speed_y = (jump_speed_y - 0.08) * 0.98
-
-        total_speed_x = total_speed_x + jump_speed_x
-        total_speed_y = total_speed_y + jump_speed_y
-
-        print(f"B/T Speed: {jump_speed_x}, {jump_speed_y}, Total Speed: {total_speed_x}, {total_speed_y}")
-        trajectory.append((round(total_speed_x),round(total_speed_y)))
-
-        for i in range(airtime-3):
-            jump_speed_x = (jump_speed_x * 0.91) + (0.02 * 1.3 * math.cos(facing))
-            total_speed_x = total_speed_x + jump_speed_x
-
-            jump_speed_y = (jump_speed_y - 0.08) * 0.98
-            total_speed_y = total_speed_y + jump_speed_y
-
-            print(f"B/T Speed: {jump_speed_x}, {jump_speed_y}, Total Speed: {total_speed_x}, {total_speed_y}")
-            trajectory.append((round(total_speed_x),round(total_speed_y)))
-
-        jump_speed_y = (jump_speed_y - 0.08) * 0.98
-        total_speed_y = total_speed_y + jump_speed_y
-
-        print(f"B/T Speed: {jump_speed_x}, {jump_speed_y}, Total Speed: {total_speed_x}, {total_speed_y}")
-        trajectory.append((round(total_speed_x),round(total_speed_y)))
-        
-        await ctx.send(f"Final speeds: {jump_speed_x}, {jump_speed_y}")
-        await ctx.send(f"Distance covered: {total_speed_x}, {total_speed_y}")
-        await ctx.send('\n'.join(map(str, trajectory)))
+        print()
 
 
 
@@ -86,7 +40,7 @@ async def admin(ctx, subcommand=None, args1=None, args2=None, args3=None):
         try:
             bot.reload_extension(f'commands.{args1}')
             await ctx.send(f"```Reloaded extension {args1}```")
-            print(f"```Extension command.{args1} was reloaded```")
+            print(f"Extension command.{args1} was reloaded")
         except:
             await ctx.send("```That command does not exist```")
 

@@ -47,7 +47,7 @@ async def trivia(ctx):
     await ctx.send(embed = em)
 
     try:
-        msg = await bot.wait_for("message", check = lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout = 20)
+        msg = await bot.wait_for("message", check = lambda m: m.author == ctx.author and m.channel == ctx.channel and (m.content == "1" or m.content == "2" or m.content == "3" or m.content == "4"), timeout = 20)
         if(msg.content.isnumeric()):
             if(int(msg.content) > 0 and int(msg.content) < 5):
                 if(int(msg.content) == correct_index):
@@ -63,16 +63,6 @@ async def trivia(ctx):
                     await add_xp(ctx.author.id, (100), ctx)
 
                     return
-            else:
-                await ctx.send(f"**{ctx.author}** please choose an answer between 1 through 4.")
-                await add_xp(ctx.author.id, (100), ctx)
-
-                return
-        else:
-            await ctx.send(f"**{ctx.author}** that's not a valid answer, smart one.")
-            await add_xp(ctx.author.id, (100), ctx)
-
-            return
     except:
         await ctx.send(f"**{ctx.author}**, you ran out of time")
 

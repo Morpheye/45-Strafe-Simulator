@@ -5,13 +5,13 @@ from discord.ext import commands
 from db_functions import add_coins, add_xp, get_level, get_kriddytoo_shrine_boost, add_kriddytoo_shrine_boost
 from datetime import datetime
 
-instructions = "Use `?duel left` or `?duel right` to move positions, and `?duel attack <x_velocity> <y_velocity>` to launch your attack. You may move up to twice per turn, and your turn ends once you attack."
+instructions = "Use `?duel left` or `?duel right` to move positions, and `?duel attack <x_velocity> <y_velocity>` to launch your attack. You may move up to 3x per turn, and your turn ends once you attack."
 
 
 @commands.command(name = "duel", description = "Duel another player in a catapult battle")
 @commands.bot_has_permissions(send_messages=True)
 @commands.guild_only()
-@commands.cooldown(1, 1, commands.BucketType.user)
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def duel(ctx, subcommand = None):
 
     if subcommand is None:
@@ -57,9 +57,11 @@ async def duel(ctx, subcommand = None):
         return await ctx.send(f"**{player_2}**, the duel request from **{player_1}** has expired.")
 
     current_turn = 1
-    moves_left = 2
+    moves_left = 3
     player1_health = 100
     player2_health = 100
+
+    turn = 1
 
 
     #canvas frame
@@ -152,7 +154,7 @@ async def duel(ctx, subcommand = None):
                         pass
                     
                     elif moves_left == 0:
-                        await ctx.send(f"**{player_1}**, you have already moved twice and must attack now.", delete_after = 5)
+                        await ctx.send(f"**{player_1}**, you have already moved three times and must attack now.", delete_after = 5)
                         pass
 
                     #wall
@@ -160,6 +162,7 @@ async def duel(ctx, subcommand = None):
                         if canvas[player1_y-1][player1_x-1] == ":green_square:" or canvas[player1_y][player1_x-1] == ":red_square:":
                             pass
                         else:
+                            clear_trajectory()
                             canvas[player1_y][player1_x] = ":black_large_square:"
                             player1_y = player1_y - 1
                             player1_x = player1_x - 1
@@ -169,6 +172,7 @@ async def duel(ctx, subcommand = None):
 
                     #no wall
                     else:
+                        clear_trajectory()
                         canvas[player1_y][player1_x] = ":black_large_square:"
                         player1_x = player1_x - 1
                         canvas[player1_y][player1_x] = ":blue_square:"
@@ -183,8 +187,6 @@ async def duel(ctx, subcommand = None):
 
                     await msg.delete()
 
-                    clear_trajectory()
-
                     content = []
 
                     for i in range(12):
@@ -192,7 +194,7 @@ async def duel(ctx, subcommand = None):
 
                     em = discord.Embed(title = f"Duel: {player_1} vs {player_2}", description = '\n'.join(map(str, content)), color = ctx.author.color)
                     em.add_field(name = "Instructions", value = instructions, inline = False)
-                    em.add_field(name = "Last Action", value = "```Player moved positions```", inline = False)
+                    em.add_field(name = "Last Action", value = f"```{player_1} moved left```", inline = False)
                     em.add_field(name = f"{player_1}'s turn", value = f"Moves left: {moves_left}", inline = False)
                     em.add_field(name = f":blue_square: {player_1} Health", value = f"{player1_health} / 100")
                     em.add_field(name = f":red_square: {player_2} Health", value = f"{player2_health} / 100")
@@ -205,7 +207,7 @@ async def duel(ctx, subcommand = None):
                         pass
 
                     elif moves_left == 0:
-                        await ctx.send(f"**{player_1}**, you have already moved twice and must attack now.", delete_after = 5)
+                        await ctx.send(f"**{player_1}**, you have already moved three times and must attack now.", delete_after = 5)
                         pass
 
                     #wall
@@ -213,6 +215,7 @@ async def duel(ctx, subcommand = None):
                         if canvas[player1_y-1][player1_x+1] == ":green_square:" or canvas[player1_y-1][player1_x+1] == ":red_square:":
                             pass
                         else:
+                            clear_trajectory()
                             canvas[player1_y][player1_x] = ":black_large_square:"
                             player1_y = player1_y - 1
                             player1_x = player1_x + 1
@@ -222,6 +225,7 @@ async def duel(ctx, subcommand = None):
 
                     #no wall
                     else:
+                        clear_trajectory()
                         canvas[player1_y][player1_x] = ":black_large_square:"
                         player1_x = player1_x + 1
                         canvas[player1_y][player1_x] = ":blue_square:"
@@ -236,8 +240,6 @@ async def duel(ctx, subcommand = None):
 
                     await msg.delete()
 
-                    clear_trajectory()
-
                     content = []
 
                     for i in range(12):
@@ -245,7 +247,7 @@ async def duel(ctx, subcommand = None):
 
                     em = discord.Embed(title = f"Duel: {player_1} vs {player_2}", description = '\n'.join(map(str, content)), color = ctx.author.color)
                     em.add_field(name = "Instructions", value = instructions, inline = False)
-                    em.add_field(name = "Last Action", value = "```Player moved positions```", inline = False)
+                    em.add_field(name = "Last Action", value = f"```{player_1} moved right```", inline = False)
                     em.add_field(name = f"{player_1}'s turn", value = f"Moves left: {moves_left}", inline = False)
                     em.add_field(name = f":blue_square: {player_1} Health", value = f"{player1_health} / 100")
                     em.add_field(name = f":red_square: {player_2} Health", value = f"{player2_health} / 100")
@@ -267,8 +269,8 @@ async def duel(ctx, subcommand = None):
                             await msg.delete()
                             continue
 
-                        if abs(args[1]) > 1.5 or args[2] > 1.5 or args[2] < 0:
-                            await ctx.send(f"{player_1.mention}, your x velocity must be between `-1.5` and `1.5`, and your y velocity must be between `0` and `1.5`.", delete_after = 10)
+                        if abs(args[1]) > 1 or args[2] > 1 or args[2] < 0:
+                            await ctx.send(f"{player_1.mention}, your x velocity must be between `-1` and `1`, and your y velocity must be between `0` and `1`.", delete_after = 10)
                             await msg.delete()
                             continue
 
@@ -311,7 +313,10 @@ async def duel(ctx, subcommand = None):
                                 total_speed_y = total_speed_y + jump_speed_y
 
                                 #add to trajectory
-                                trajectory.append((player1_y - total_speed_y, player1_x + total_speed_x))
+                                if (player1_x + total_speed_x) < 0:
+                                    break
+                                else:
+                                    trajectory.append((player1_y - total_speed_y, player1_x + total_speed_x))
 
                         except:
                             pass
@@ -320,19 +325,20 @@ async def duel(ctx, subcommand = None):
                         total_speed_y = total_speed_y + jump_speed_y
                         
                         #draw trajectory
-                        last_action = f"{player_1} attacked"
+                        last_action = f"{player_1} attacked, it is now {player_2}'s turn"
                         for i in range(len(trajectory)):
                             try:
                                 if round(trajectory[i][0]) > 0:
                                     if canvas[round(trajectory[i][0])][round(trajectory[i][1])] == ":blue_square:":
                                         continue
                                     elif canvas[round(trajectory[i][0])][round(trajectory[i][1])] == ":red_square:":
-                                        damage = round(20 * (1 - abs(round(trajectory[i][1])-trajectory[i][1])))
-                                        last_action = f"{player_1} hit {player_2} for {damage} damage"
-                                        player2_health = player2_health - damage
+                                        if turn != 1:
+                                            damage = round(20 * (1 - abs(round(trajectory[i][1])-trajectory[i][1])))
+                                            last_action = f"{player_1} hit {player_2} for {damage} damage, it is now {player_2}'s turn"
+                                            player2_health = player2_health - damage
                                         pass
                                     elif canvas[round(trajectory[i][0])][round(trajectory[i][1])] == ":green_square:":
-                                        last_action = f"{player_1} attacked"
+                                        last_action = f"{player_1} attacked, it is now {player_2}'s turn"
                                         pass
                                     else:
                                         canvas[round(trajectory[i][0])][round(trajectory[i][1])] = ":black_square_button:"
@@ -343,6 +349,10 @@ async def duel(ctx, subcommand = None):
 
                         for i in range(12):
                             content.append(''.join(map(str, canvas[i])))
+
+                        if turn == 1:
+                            last_action = f"{player_1} attacked, but damage was nullified as it is the first turn of the game. It is now {player_2}'s turn."
+                            turn = 2
 
                         em = discord.Embed(title = f"Duel: {player_1} vs {player_2}", description = '\n'.join(map(str, content)), color = ctx.author.color)
                         em.add_field(name = "Instructions", value = instructions, inline = False)
@@ -362,7 +372,7 @@ async def duel(ctx, subcommand = None):
                             return await ctx.send(f"**{player_1}** won the duel!")
 
                         current_turn = 2
-                        moves_left = 2
+                        moves_left = 3
 
                 #close duel
                 else:
@@ -388,6 +398,10 @@ async def duel(ctx, subcommand = None):
                         em.add_field(name = f":red_square: {player_2} Health", value = f"{player2_health} / 100")
                                 
                         return await original_msg.edit(embed = em)
+
+
+
+
             #player 2s turn
             if current_turn == 2:
                 msg = await bot.wait_for("message", check = lambda m: m.author == player_2 and m.channel == ctx.channel and m.content.startswith('?duel'), timeout = 60)
@@ -414,7 +428,7 @@ async def duel(ctx, subcommand = None):
                         pass
                     
                     elif moves_left == 0:
-                        await ctx.send(f"**{player_2}**, you have already moved twice and must attack now.", delete_after = 5)
+                        await ctx.send(f"**{player_2}**, you have already moved three times and must attack now.", delete_after = 5)
                         pass
 
                     #wall
@@ -454,7 +468,7 @@ async def duel(ctx, subcommand = None):
 
                     em = discord.Embed(title = f"Duel: {player_1} vs {player_2}", description = '\n'.join(map(str, content)), color = ctx.author.color)
                     em.add_field(name = "Instructions", value = instructions, inline = False)
-                    em.add_field(name = "Last Action", value = "```Player moved positions```", inline = False)
+                    em.add_field(name = "Last Action", value = f"```{player_2} moved left```", inline = False)
                     em.add_field(name = f"{player_2}'s turn", value = f"Moves left: {moves_left}", inline = False)
                     em.add_field(name = f":blue_square: {player_1} Health", value = f"{player1_health} / 100")
                     em.add_field(name = f":red_square: {player_2} Health", value = f"{player2_health} / 100")
@@ -467,7 +481,7 @@ async def duel(ctx, subcommand = None):
                         pass
 
                     elif moves_left == 0:
-                        await ctx.send(f"**{player_2}**, you have already moved twice and must attack now.", delete_after = 5)
+                        await ctx.send(f"**{player_2}**, you have already moved three times and must attack now.", delete_after = 5)
                         pass
 
                     #wall
@@ -507,7 +521,7 @@ async def duel(ctx, subcommand = None):
 
                     em = discord.Embed(title = f"Duel: {player_1} vs {player_2}", description = '\n'.join(map(str, content)), color = ctx.author.color)
                     em.add_field(name = "Instructions", value = instructions, inline = False)
-                    em.add_field(name = "Last Action", value = "```Player moved positions```", inline = False)
+                    em.add_field(name = "Last Action", value = f"```{player_2} moved right```", inline = False)
                     em.add_field(name = f"{player_2}'s turn", value = f"Moves left: {moves_left}", inline = False)
                     em.add_field(name = f":blue_square: {player_1} Health", value = f"{player1_health} / 100")
                     em.add_field(name = f":red_square: {player_2} Health", value = f"{player2_health} / 100")
@@ -529,8 +543,8 @@ async def duel(ctx, subcommand = None):
                             await msg.delete()
                             continue
 
-                        if abs(args[1]) > 1.5 or args[2] > 1.5 or args[2] < 0:
-                            await ctx.send(f"{player_2.mention}, your x velocity must be between `-1.5` and `1.5`, and your y velocity must be between `0` and `1.5`.", delete_after = 10)
+                        if abs(args[1]) > 1 or args[2] > 1 or args[2] < 0:
+                            await ctx.send(f"{player_2.mention}, your x velocity must be between `-1` and `1`, and your y velocity must be between `0` and `1`.", delete_after = 10)
                             await msg.delete()
                             continue
 
@@ -573,7 +587,10 @@ async def duel(ctx, subcommand = None):
                                 total_speed_y = total_speed_y + jump_speed_y
 
                                 #add to trajectory
-                                trajectory.append((player2_y - total_speed_y, player2_x + total_speed_x))
+                                if (player2_x + total_speed_x) < 0:
+                                    break
+                                else:
+                                    trajectory.append((player2_y - total_speed_y, player2_x + total_speed_x))
 
                         except:
                             pass
@@ -582,7 +599,7 @@ async def duel(ctx, subcommand = None):
                         total_speed_y = total_speed_y + jump_speed_y
                         
                         #draw trajectory
-                        last_action = f"{player_2} attacked"
+                        last_action = f"{player_2} attacked, it is now {player_1}'s turn"
                         for i in range(len(trajectory)):
                             try:
                                 if round(trajectory[i][0]) > 0:
@@ -590,11 +607,11 @@ async def duel(ctx, subcommand = None):
                                         continue
                                     elif canvas[round(trajectory[i][0])][round(trajectory[i][1])] == ":blue_square:":
                                         damage = round(20 * (1 - abs(round(trajectory[i][1])-trajectory[i][1])))
-                                        last_action = f"{player_2} hit {player_1} for {damage} damage"
+                                        last_action = f"{player_2} hit {player_1} for {damage} damage, it is now {player_1}'s turn"
                                         player1_health = player1_health - damage
                                         pass
                                     elif canvas[round(trajectory[i][0])][round(trajectory[i][1])] == ":green_square:":
-                                        last_action = f"{player_2} attacked"
+                                        last_action = f"{player_2} attacked, it is now {player_1}'s turn"
                                         pass
                                     else:
                                         canvas[round(trajectory[i][0])][round(trajectory[i][1])] = ":black_square_button:"
@@ -624,7 +641,7 @@ async def duel(ctx, subcommand = None):
                             return await ctx.send(f"**{player_1}** won the duel!")
 
                         current_turn = 1
-                        moves_left = 2
+                        moves_left = 3
 
                 #close duel
                 else:
@@ -639,7 +656,7 @@ async def duel(ctx, subcommand = None):
                             possible_player = None
                             pass
                     if possible_player is None:
-                        await ctx.send(f"{player_1.mention}, that is not a valid action.", delete_after = 10)
+                        await ctx.send(f"{player_2.mention}, that is not a valid action.", delete_after = 10)
                         continue
                     else:
                         duel_open = False

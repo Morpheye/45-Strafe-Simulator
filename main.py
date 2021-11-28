@@ -62,6 +62,7 @@ async def change_presence():
 @tasks.loop(minutes = 1)
 async def reset_dailies():
     if datetime.now().hour == 0 and datetime.now().minute == 0:
+        #Change datetime.now().hour to 24
         db = sqlite3.connect('database.sqlite')
         cursor = db.cursor()
         cursor.execute(f"SELECT * FROM users")
